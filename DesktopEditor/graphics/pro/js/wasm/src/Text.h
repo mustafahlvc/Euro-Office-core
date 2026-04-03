@@ -58,11 +58,27 @@ namespace NSHtmlRenderer
 		NSStructures::CFont* m_pFont;
 		CHFontInfo m_oCurrentInfo;
 
+		bool m_bIsType3;
+		double m_dType3GlyphWidth;
+
 	public:
-		CFontManagerWrapper() : m_pManager(NULL) {}
+		CFontManagerWrapper() : m_pManager(NULL), m_bIsType3(false), m_dType3GlyphWidth(0) {}
 		virtual ~CFontManagerWrapper()
 		{
 			RELEASEOBJECT(m_pManager);
+		}
+
+		void SetType3Metrics(int nAscent, int nDescent, int nUnitsPerEm, double dGlyphWidth)
+		{
+			m_bIsType3 = true;
+			m_dType3GlyphWidth = dGlyphWidth;
+			m_oCurrentInfo.m_lAscent     = nAscent;
+			m_oCurrentInfo.m_lDescent    = nDescent;
+			m_oCurrentInfo.m_lUnitsPerEm = nUnitsPerEm > 0 ? nUnitsPerEm : 1000;
+		}
+		void ClearType3()
+		{
+			m_bIsType3 = false;
 		}
 
 		void Init(NSFonts::IApplicationFonts* pApplicationFonts, int nCacheSize = 0)
@@ -90,6 +106,9 @@ namespace NSHtmlRenderer
 		}
 		double MeasureString(const unsigned int* symbols, const int& count, double x, double y)
 		{
+			if (m_bIsType3)
+				return fabs(m_dType3GlyphWidth * 25.4 / 72.0);
+
 			if (!m_pManager)
 				return 0;
 
@@ -270,7 +289,7 @@ namespace NSHtmlRenderer
 			}
 
 			// That's it, the baseline is set. now we just continue the line
-			if (bIsDumpFont)
+			if (bIsDumpFont && !m_oFontManager.m_bIsType3)
 				m_oFontManager.LoadCurrentFont();
 
 			double dKoef = m_oFontManager.m_pFont->Size * 25.4 / (72 * m_oFontManager.m_oCurrentInfo.m_lUnitsPerEm);

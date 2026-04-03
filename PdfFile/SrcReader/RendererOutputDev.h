@@ -38,6 +38,7 @@
 
 namespace PdfReader
 {
+	struct CType3FontMetrics;
 	//-------------------------------------------------------------------------------------------------------------------------------
 	struct TFontEntry
 	{
@@ -269,6 +270,7 @@ namespace PdfReader
 		void AddTextClip(GfxState* pGState, GfxOutputState* pState = NULL);
 		void UpdateAllClip(GfxState *pGState);
 		void DoTransform(double *pMatrix, double *pdShiftX, double *pdShiftY, bool bText = false);
+		CType3FontMetrics* GetType3FontMetrics(GfxFont* pFont);
 	private:
 
 		IRenderer*                    m_pRenderer;
@@ -278,6 +280,7 @@ namespace PdfReader
 
 		XRef*                         m_pXref; // Xref table for this PDF document
 		CPdfFontList*                 m_pFontList;
+		std::map<int, CType3FontMetrics*> m_mapType3Metrics;
 
 		bool                         *m_pbBreak;         // External renderer stop
 
