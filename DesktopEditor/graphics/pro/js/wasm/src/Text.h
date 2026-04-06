@@ -35,9 +35,9 @@ namespace NSHtmlRenderer
 {
 	struct CHFontInfo
 	{
-		int m_lAscent;
-		int m_lDescent;
-		int m_lUnitsPerEm;
+		double m_lAscent;
+		double m_lDescent;
+		double m_lUnitsPerEm;
 
 		CHFontInfo() : m_lAscent(0), m_lDescent(0), m_lUnitsPerEm(0) {}
 		CHFontInfo(const CHFontInfo& oSrc) : m_lAscent(oSrc.m_lAscent), m_lDescent(oSrc.m_lDescent), m_lUnitsPerEm(oSrc.m_lUnitsPerEm) {}
@@ -68,13 +68,13 @@ namespace NSHtmlRenderer
 			RELEASEOBJECT(m_pManager);
 		}
 
-		void SetType3Metrics(int nAscent, int nDescent, int nUnitsPerEm, double dGlyphWidth)
+		void SetType3Metrics(double dAscent, double dDescent, double dUnitsPerEm, double dGlyphWidth)
 		{
 			m_bIsType3 = true;
 			m_dType3GlyphWidth = dGlyphWidth;
-			m_oCurrentInfo.m_lAscent     = nAscent;
-			m_oCurrentInfo.m_lDescent    = nDescent;
-			m_oCurrentInfo.m_lUnitsPerEm = nUnitsPerEm > 0 ? nUnitsPerEm : 1000;
+			m_oCurrentInfo.m_lAscent     = dAscent;
+			m_oCurrentInfo.m_lDescent    = dDescent;
+			m_oCurrentInfo.m_lUnitsPerEm = dUnitsPerEm > 0 ? dUnitsPerEm : 1000;
 		}
 		void ClearType3()
 		{
