@@ -471,6 +471,8 @@ namespace PdfReader
 	{
 		m_pRenderer = NULL;
 		RELEASEINTERFACE(m_pSoftMask);
+		for (auto& oMetrics : m_mapType3Metrics)
+			delete oMetrics.second;
 	}
 	void RendererOutputDev::startPage(int nPageIndex, GfxState* pGState)
 	{
@@ -2735,7 +2737,10 @@ namespace PdfReader
 		double dShiftX = 0, dShiftY = 0;
 		DoTransform(arrMatrix, &dShiftX, &dShiftY, true);
 
-		double dGlyphW = (dDx);
+		// dDx, dDy is the advance in user space; the text layer takes glyph widths in page points
+		double dAdvX = dDx * pCTM[0] + dDy * pCTM[2];
+		double dAdvY = dDx * pCTM[1] + dDy * pCTM[3];
+		double dGlyphW = sqrt(dAdvX * dAdvX + dAdvY * dAdvY);
 		double dGlyphH = PDFCoordsToMM(dDy);
 
 		m_pRenderer->CommandDrawType3CHAR(
