@@ -150,6 +150,13 @@ Done:
       again by xpdf's JBIG2 decoder through `ConvertToPixels` at 1:1 and compared with the
       source pixels. Deps: UnicodeConverter, kernel, graphics, PdfFile. `GTEST_MAIN`. No
       fixtures — pages are built in memory.
+- [x] `PdfFile/test/type3` — new suite (`pdf_type3_text_test`), not a `.pro` migration. Covers
+      text in Type 3 fonts in the PDF viewer's text layer: pages are drawn on
+      `CHTMLRendererText` the way `CDrawingFile::GetGlyphs` does, and the decoded layer must
+      hold the text with glyph widths equal to the advances on the page, also under a scaled
+      CTM. Also checks that ordinary rendering still draws the glyph procedures. Deps:
+      UnicodeConverter, kernel, graphics, PdfFile; compiles `HTMLRendererText.cpp` in.
+      `GTEST_MAIN`. No fixtures — pages are built in memory.
 - [x] `RtfFile/Format/test` — new suite (`rtf_lex_test`), not a `.pro` migration. First
       coverage for the RTF tokenizer that fronts every RTF import (`RtfLex`, rtf2docx).
       Deps: links the existing `x2tlib` target; `RtfLex.cpp`, `RtfToken.cpp` and
